@@ -1,6 +1,6 @@
 # Data science Course 4 - Exploratory Data Analysis
 # Week 1 -Assignment
-# Script plot1.R
+# Script plot4.R
 
 
 #load packages
@@ -20,7 +20,6 @@ hhpc<-fread("household_power_consumption.txt")
 hhpc<-hhpc  %>% filter(Date=="1/2/2007" | Date=="2/2/2007")
 
 # transform the variables to the neccesary data-types
-hhpc$Date<-as.Date(hhpc$Date, "%d/%m/%Y")
 hhpc$Global_active_power<-as.numeric(hhpc$Global_active_power)
 hhpc$Global_reactive_power<-as.numeric(hhpc$Global_reactive_power)
 hhpc$Voltage<-as.numeric(hhpc$Voltage)
@@ -29,13 +28,33 @@ hhpc$Sub_metering_1<-as.numeric(hhpc$Sub_metering_1)
 hhpc$Sub_metering_2<-as.numeric(hhpc$Sub_metering_2)
 hhpc$Sub_metering_3 <-as.numeric(hhpc$Sub_metering_3)
 
-# open a PNG-device
-png(filename = "plot1.png", width = 480, height = 480, units = "px")
+# concatenate Date and Time to DateTime
+hhpc$DateTime <- as.POSIXct(paste(hhpc$Date, hhpc$Time), format="%d/%m/%Y %H:%M:%S")
 
-# plot the histogram
-with(hhpc, lines(Global_active_power, weekdays(Date), main="Global Active Power", xlab="Global Active Power (kilowatts)"))
+# open a PNG-device
+png(filename = "plot4.png", width = 480, height = 480, units = "px")
+
+# fill the plot-file to 4 plots columnwise
+par(mfcol = c(2, 2))
+
+# plot first line-diagram
+plot(hhpc$DateTime, hhpc$Global_active_power,type="l", xlab="", ylab="Global Active Power (kilowatts)")
+
+# plot second line-diagram
+plot(hhpc$DateTime, hhpc$Sub_metering_1,type="l", xlab="", ylab="Energy sub metering")
+lines(hhpc$DateTime, hhpc$Sub_metering_2,type="l",col="red")
+lines(hhpc$DateTime, hhpc$Sub_metering_3,type="l",col="blue")
+
+# add legend
+legend("topright", legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col=c("black", "red", "blue"),lty=1, bty = "n")
+
+# plot third line-diagram
+plot(hhpc$DateTime, hhpc$Voltage,type="l", xlab="datetime", ylab="Voltage")
+
+
+# plot fourth line-diagram
+plot(hhpc$DateTime, hhpc$Global_reactive_power,type="l", xlab="datetime", ylab="Global_reactive_power")
+
 
 # close the device
 dev.off()
-
-
