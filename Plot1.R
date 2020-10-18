@@ -33,7 +33,7 @@ hhpc$Sub_metering_3 <-as.numeric(hhpc$Sub_metering_3)
 png(filename = "plot1.png", width = 480, height = 480, units = "px")
 
 # plot the histogram
-with(hhpc, lines(Global_active_power, weekdays(Date), main="Global Active Power", xlab="Global Active Power (kilowatts)"))
+with(hhpc, hist(Global_active_power, main="Global Active Power", xlab="Global Active Power (kilowatts)", col="red"))
 
 # close the device
 dev.off()
